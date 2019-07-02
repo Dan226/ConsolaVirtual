@@ -1,0 +1,43 @@
+#include<iostream>
+#include<array>
+#include<math.h>
+
+using namespace std;
+
+double derivada(int M, float *arrecos);
+
+int main(){
+    float int1;
+    float int2;
+    int puntos;
+    cout << "limite 1" << endl;
+    cin >> int1;
+    cout << "limite 2" << endl;
+    cin >> int2;
+    cout << "numero de puntos" << endl;
+    cin >> puntos;
+    float y[puntos];
+    float x[puntos];
+    int i;
+    float *y1;
+    float h =  (int2-int1)/puntos;
+    for (i = 1; i <= puntos; i++){
+        x[i] = int1 + i*h;
+        y1[i] = cos(x[i]);
+        cout << x[i] << endl;
+    }    
+ 
+    return 0;    
+}
+
+
+double derivada(int M, float *arrecos){
+    float *derivada;
+    float deri[M];
+    derivada = deri;
+    int i;
+    for(i = 1; i <= (M - 1); i++){
+        derivada[i] = (arrecos[i+1]-arrecos[i])/(arrecos[1]-arrecos[0]);
+    }    
+    return *derivada;
+}    
