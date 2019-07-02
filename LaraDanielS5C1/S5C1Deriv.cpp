@@ -22,11 +22,15 @@ int main(){
     float *y1;
     float h =  (int2-int1)/puntos;
     for (i = 1; i <= puntos; i++){
-        x[i] = int1 + i*h;
-        y1[i] = cos(x[i]);
-        cout << x[i] << endl;
+        x[i] = i*h;
     }    
- 
+    for (i = 1; i <= puntos; i++){
+        y[i] = cos(x[i]);   
+    } 
+    y1 = y;
+    cout << derivada(puntos, y1)[i] << endl;  
+
+       
     return 0;    
 }
 
@@ -34,10 +38,14 @@ int main(){
 double derivada(int M, float *arrecos){
     float *derivada;
     float deri[M];
-    derivada = deri;
+
     int i;
     for(i = 1; i <= (M - 1); i++){
-        derivada[i] = (arrecos[i+1]-arrecos[i])/(arrecos[1]-arrecos[0]);
+        deri[i] = (arrecos[i+1]-arrecos[i])/(2);
+    }    
+    derivada = deri;
+    for(i = 1; i <= M ; i++){
+        cout << derivada[i] << endl;
     }    
     return *derivada;
 }    
