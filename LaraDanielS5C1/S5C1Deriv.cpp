@@ -28,7 +28,7 @@ int main(){
         y[i] = cos(x[i]);   
     } 
     y1 = y;
-    cout << derivada(puntos, y1)[i] << endl;  
+    cout << derivada(puntos, y1)<< endl;  
 
        
     return 0;    
