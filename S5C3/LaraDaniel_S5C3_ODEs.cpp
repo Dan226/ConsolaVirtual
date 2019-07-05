@@ -9,7 +9,7 @@ double *rk4_2(double *x, double *y, int len, double h);
 int main(){
     double h = 0.01;   
     double min_x = 0;
-    double max_x = 100;
+    double max_x = 10;
     int i;
     double *x, *V, *x0;
     int len = ((max_x-min_x)/h);
@@ -43,7 +43,7 @@ double f2(double Vx, double x){
     double k = 300.0;
     double m = 2.0;
     double h = 0.01;
-    return -(k/m)*x*(h);
+    return -(k/m)*x;
 }    
     
 double *rk4_2(double *x, double *V, int len, double h){
@@ -58,8 +58,8 @@ double *rk4_2(double *x, double *V, int len, double h){
     double t[len];
     
     for(i = 2; i<=len; i++){
-        k11 = f1(x[i-1], V[i-1]);
-        k12 = f2(x[i-1], V[i-1]);
+        k11 = f1(V[i-1],x[i-1]);
+        k12 = f2(V[i-1],x[i-1]);
         
         x1 = x[i-1]+ (h/2.0);
         y11 = x[i-1] + (h/2.0) * k11;
