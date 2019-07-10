@@ -279,10 +279,10 @@ double pdeoscilacion(int len, double h, int L){
         
         for(i = 2; i <= (len-1); i++){
             u_future[i] = (2.0* (1 - r*r))*u_present[i] - u_past[i] + (r*r)*(u_present[i+1] +  u_present[i-1]);
-            u_future[len] = A0*cos((3.0*c*j*3.1415167)/L);
-           
-        }  
-        
+            
+            
+        }    
+        u_future[len] = A0*cos((3.0*c*j*3.1415167)/L);
         
         for(i = 0; i <= len; i++){    
             u_past[i] = u_present[i];
