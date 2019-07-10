@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 datos1 = np.genfromtxt("datos1.dat")
 
@@ -171,3 +172,10 @@ plt.ylabel('u')
 plt.title("Cuerda")
 plt.legend()
 plt.savefig("PDECaso3")
+
+datos4 = np.genfromtxt("datos4.dat")
+XX, YY = np.meshgrid(np.linspace(0,1,len(datos4)), np.linspace(0,1,len(datos4)))
+
+plt.figure()
+Axes3D.plot_surface(XX, YY, datos4, rstride=1, cstride=1, facecolors=plt.cm.BrBG(datos4), shade=False)
+plt.savefig("Tambor")

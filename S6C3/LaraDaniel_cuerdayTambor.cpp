@@ -7,6 +7,7 @@ using namespace std;
 double pde(int len, double h);
 double pdelibre(int len, double h);
 double pdeoscilacion(int len,double h, int L);
+double tambor(int len, double h);
 
 int main(){
     double h = 0.01;   
@@ -17,7 +18,9 @@ int main(){
     int len = ((max_x-min_x)/h);
     pde(len,h);
     pdelibre(len,h);
+    tambor(len, h);
     pdeoscilacion(len,h, L);
+    
     
     return 0;    
 }
@@ -125,8 +128,6 @@ double pde(int len, double h){
     }    
     myfile.close();  
 }    
-
-
 
 double pdelibre(int len, double h){
     double a[len];
@@ -261,29 +262,19 @@ double pdeoscilacion(int len, double h, int L){
     for(i = 1; i <= len; i++){
         u_future[i] = 0.0;
      }
-    
     for(i = 2; i <= (len-1); i++){
         u_future[i] = u_inicial[i]+(r*r/2.0)*(u_inicial[i+1]-2.0*u_inicial[i]+u_inicial[i-1]);
-    }   
-    
-    
-    
+    }      
     for(i = 1; i <= len; i++){
         u_past[i] = u_inicial[i];
         u_present[i] = u_future[i];
      }
-    
-
-
     for(int j = 1; j <= iter; j++){
         
         for(i = 2; i <= (len-1); i++){
-            u_future[i] = (2.0* (1 - r*r))*u_present[i] - u_past[i] + (r*r)*(u_present[i+1] +  u_present[i-1]);
-            
-            
+            u_future[i] = (2.0* (1 - r*r))*u_present[i] - u_past[i] + (r*r)*(u_present[i+1] +  u_present[i-1]);     
         }    
         u_future[len] = A0*cos((3.0*c*j*3.1415167)/L);
-        
         for(i = 0; i <= len; i++){    
             u_past[i] = u_present[i];
             u_present[i] = u_future[i];
@@ -328,4 +319,34 @@ double pdeoscilacion(int len, double h, int L){
         cout << t6[i]<<" "<< t1[i]<< " "  << t2[i]<< " "  << t3[i]<< " "  << t4[i]<< " "  << t5[i]<< " "  << u_inicial[i] << " " << a[i] << endl;
     }    
     myfile.close();  
+}    
+double tambor(int len, double h){
+    double a[len];
+    double u_inicial[len][len];
+    double u_future[len][len];
+    double u_past[len][len];
+    double u_present[len][len];
+    double delta_a, delta_t, c, r;
+    a[1] = h;
+    int i, j;
+    float A0 = 0.1;
+
+    for(i = 1; i <= (len); i++){
+            for(j = 1; j <=(len); j++){
+                u_inicial[i][j] = A0*exp(-(((i)*(i)/0.2)+((j)*(j)/0.2)));
+            }    
+    }
+    ofstream myfile;
+    myfile.open ("datos4.dat", ios::out);
+    streambuf* stream_buffer_cout1 = cout.rdbuf();
+    streambuf* stream_buffer_myfile = myfile.rdbuf();
+    cout.rdbuf(stream_buffer_myfile);
+    for(i = 0; i<=(len-1); i++){
+        for(j = 0; j<=(len-1); j++){
+            cout << u_inicial[i][j] << " ";
+        }    
+        cout << endl;
+    }    
+    myfile.close(); 
+    
 }    
