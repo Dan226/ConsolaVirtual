@@ -20,7 +20,7 @@ double difusion(int len, double h){
     double placa[len][len];
     double p_future[len][len];
     int i, j, t;
-    float delta_t = (h/v)*0.25;
+    float delta_t = ((h*h)/v)*0.25;
     int iter = 2500/delta_t;
     
     for(i = 0; i <= (len-1); i++){
@@ -51,9 +51,18 @@ double difusion(int len, double h){
     for(t = 0; t <= iter; t++){
         for(i = 1; i < (len-1); i++){
             for(j = 1; j < (len-1); j++){
-                p_future[i][j] = placa[i][j] + v*(delta_t/(h*h))*(placa[i+1][j]+placa[i-1][j]) - v*(delta_t/(h*h))*(placa[i][j+1]+placa[i][j-1]) ;
+                p_future[i][j] = placa[i][j] + v*(delta_t/(h*h))*(placa[i+1][j]+placa[i-1][j]) + v*(delta_t/(h*h))*(placa[i][j+1]+placa[i][j-1] - 4*placa[i][j]) ;
             }    
         } 
+        for(i = 0; i <= (len-1); i++){
+            for(j = 0; j <= (len-1); j++){
+                p_future[0][j] = 50;
+                p_future[len-1][j] = 50;
+                p_future[i][0] = 50;
+                p_future[i][len-1] = 50;
+            }    
+        } 
+        
         for(i = 0; i <= (len-1); i++){
             for(j = 0; j <= (len-1); j++){
                 placa[i][j] = p_future[i][j] ;
