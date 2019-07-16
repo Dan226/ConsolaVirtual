@@ -10,11 +10,10 @@ double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h);
 
 int main(){
     double h = 0.01;   
-    double min_x = 0;
-    double max_x = 20;
+    double tmax = 20;
     int i;
     double x0, Vx0, y0, Vy0;
-    int len = ((max_x-min_x)/h);
+    int len = ((tmax)/h);
     x0 = 0.1163;
     Vx0 = -6.35;
     y0 = 0.9772;
@@ -193,12 +192,19 @@ double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
         d[i] = 0;
     }    
     
-    for(i = 2; i<len-1; i++){
-        a[i+1] = a[i-1] - 2*tau*f1(c[i], a[i],a[i],b[i])*h;
-        b[i+1] = b[i-1] - 2*tau*f1(d[i], b[i],a[i],b[i])*h;
+    c[0] = Vx-h/2.0*x;
+    d[0] = Vy-h/2.0*y;
+    
+    
+    for(i =1; i<len-2; i++){
         
-        c[i+1] = c[i-1] - 2*tau*f2(c[i], a[i],a[i],b[i])*h;
-        d[i+1] = d[i-1] - 2*tau*f2(d[i], b[i],a[i],b[i])*h;
+        c[i+1] = c[i] + f2(c[i], a[i],a[i],b[i])*h;
+        d[i+1] = d[i] + f2(d[i], b[i],a[i],b[i])*h;
+        
+        a[i+1] = a[i] + f1(c[i], a[i],a[i],b[i])*h;
+        b[i+1] = b[i] + f1(d[i], b[i],a[i],b[i])*h;
+        
+        
     }    
     
     
