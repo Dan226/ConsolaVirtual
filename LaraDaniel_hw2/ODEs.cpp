@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <math.h>
+#include <cmath>
 
 using namespace std;
 
@@ -9,7 +9,7 @@ double *euler_2(double Vx, double Vy, double x,double y, int len, double h);
 double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h);
 
 int main(){
-    double h = 0.01;   
+    double h = 0.1;   
     double min_x = 0;
     double max_x = 10;
     int i;
@@ -20,6 +20,8 @@ int main(){
     y0 = 0.9772;
     Vy0 = 0.606;
 
+    rk4_2(Vx0,Vy0,x0,y0,len,h);
+    euler_2(Vx0,Vy0,x0,y0,len,h);
     leapfrog_2(Vx0,Vy0,x0,y0,len,h);
     
     return 0;    
@@ -32,8 +34,7 @@ double f1(double Vx, double s, double x, double y){
 double f2(double Vx, double s, double x, double y){
     double G = 6.67e-11;
     double M = 1.99e30;
-    double r = pow(x*x+y*y,0.5);
-    return -G*(M*s)/(r*r*r);
+    return (-G*M*s)/((x*x+y*y)*(x*x+y*y));
 }    
    
 double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
@@ -43,10 +44,6 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     double average3;
     double average4;
     
-    double *a1 = new double(len);
-    double *a2 = new double(len);
-    double *V1 = new double(len);
-    double *V2 = new double(len);
     
     double a[len], b[len], c[len], d[len], t[len];
     a[1] = x;
@@ -54,7 +51,7 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     c[1] = Vx;
     d[1] = Vy;
     
-    for(i = 2; i<=len-1; i++){
+    for(i = 2; i<=len; i++){
         a[i] = 0;
         b[i] = 0;
         c[i] = 0;
@@ -67,7 +64,7 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     double y11x,y12x,y21x,y22x,y31x,y32x;
     double y11y,y12y,y21y,y22y,y31y,y32y;
     
-    for(i = 1; i<=len; i++){
+    for(i = 2; i<=len; i++){
         k11x = f1(c[i-1],a[i-1],a[i-1],b[i-1]);
         k11y = f1(d[i-1],b[i-1],a[i-1],b[i-1]);
         
@@ -120,10 +117,8 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
         c[i] = c[i-1] + h * average2;
         d[i] = d[i-1] + h * average4;
     }    
-    a1 = a;
-    a2 = b;
-    V1 = c;
-    V2 = d;
+
+    
     t[1] = h;
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
@@ -134,7 +129,7 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     streambuf* stream_buffer_myfile = myfile.rdbuf();
     cout.rdbuf(stream_buffer_myfile);
     for(i = 1; i<=len; i++){
-            cout << t[i]<< " "  <<a1[i] << " " << a2[i] << " " << V1[i] << " " << V2[i] << endl;
+            cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
     }    
     myfile.close();   
 
@@ -161,7 +156,7 @@ double *euler_2(double Vx, double Vy, double x,double y, int len, double h){
         d[i] = 0;
     }    
     
-    for(i = 0; i<len; i++){
+    for(i = 1; i<=len; i++){
         a[i+1] = a[i] + f1(c[i], a[i],a[i],b[i])*h;
         b[i+1] = b[i] + f1(d[i], b[i],a[i],b[i])*h;
         
@@ -174,6 +169,7 @@ double *euler_2(double Vx, double Vy, double x,double y, int len, double h){
     a2 = b;
     V1 = c;
     V2 = d;
+    
     t[1] = h;
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
@@ -184,7 +180,7 @@ double *euler_2(double Vx, double Vy, double x,double y, int len, double h){
     streambuf* stream_buffer_myfile = myfile.rdbuf();
     cout.rdbuf(stream_buffer_myfile);
     for(i = 1; i<=len; i++){
-            cout << t[i]<< " "  <<a1[i] << " " << a2[i] << " " << V1[i] << " " << V2[i] << endl;
+            cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
     }    
     myfile.close();   
     return Vx,a;
@@ -192,10 +188,6 @@ double *euler_2(double Vx, double Vy, double x,double y, int len, double h){
 
 double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
     int i;
-    double *a1 = new double(len);
-    double *a2 = new double(len);
-    double *V1 = new double(len);
-    double *V2 = new double(len);
     double tau = 1e-2;
     
     double a[len], b[len], c[len], d[len], t[len];
@@ -211,17 +203,14 @@ double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
         d[i] = 0;
     }    
     
-    for(i = 1; i<len-1; i++){
-        a[i+1] = a[i] + f1(c[i], a[i],a[i],b[i])*h + 0.5*f2(c[i], a[i],a[i],b[i])*h*h;
-        b[i+1] = b[i] + f1(d[i], b[i],a[i],b[i])*h + 0.5*f2(c[i], b[i],a[i],b[i])*h*h;
-        c[i+1] = c[i-1] + 0.5*f2(c[i], a[i],a[i],b[i])*h+ 0.5*f2(c[i+1], a[i+1],a[i+1],b[i+1])*h;
-        d[i+1] = d[i-1] + 0.5*f2(d[i], b[i],a[i],b[i])*h+ 0.5*f2(c[i+1], a[i+1],a[i+1],b[i+1])*h;
+    for(i = 2; i<len-1; i++){
+        a[i+1] = a[i-1] + 2*f1(c[i], a[i],a[i],b[i])*h;
+        b[i+1] = b[i-1] + 2*f1(d[i], b[i],a[i],b[i])*h;
+        c[i+1] = c[i-1] + 2*f2(c[i], a[i],a[i],b[i])*h;
+        d[i+1] = d[i-1] + 2*f2(d[i], b[i],a[i],b[i])*h;
     }    
     
-    a1 = a;
-    a2 = b;
-    V1 = c;
-    V2 = d;
+    
     t[1] = h;
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
@@ -232,7 +221,7 @@ double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
     streambuf* stream_buffer_myfile = myfile.rdbuf();
     cout.rdbuf(stream_buffer_myfile);
     for(i = 1; i<=len; i++){
-            cout << t[i]<< " "  <<a1[i] << " " << a2[i] << " " << V1[i] << " " << V2[i] << endl;
+            cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
     }    
     myfile.close();    
 }    
