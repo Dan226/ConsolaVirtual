@@ -269,17 +269,21 @@ double leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
         d[i] = 0;
     }    
     
-    c[0] = Vx-h/2.0*x;
-    d[0] = Vy-h/2.0*y;
+    a[0] = a[1] - 2.0*f1(c[1], a[1],a[1],b[1])*h;
+    b[0] = b[1] - 2.0*f1(d[1], b[1],a[1],b[1])*h;
+        
+    c[0] = c[1] - 2.0*f2(c[1], a[1],a[1],b[1])*h;
+    d[0] = d[1] - 2.0*f2(d[1], b[1],a[1],b[1])*h;
+    
     
     
     for(i =1; i<len-2; i++){
         
-        c[i+1] = c[i] + f2(c[i], a[i],a[i],b[i])*h;
-        d[i+1] = d[i] + f2(d[i], b[i],a[i],b[i])*h;
+        c[i+1] = c[i-1] + 2.0*f2(c[i], a[i],a[i],b[i])*h;
+        d[i+1] = d[i-1] + 2.0*f2(d[i], b[i],a[i],b[i])*h;
         
-        a[i+1] = a[i] + f1(c[i], a[i],a[i],b[i])*h;
-        b[i+1] = b[i] + f1(d[i], b[i],a[i],b[i])*h;
+        a[i+1] = a[i-1] + 2.0*f1(c[i], a[i],a[i],b[i])*h;
+        b[i+1] = b[i-1] + 2.0*f1(d[i], b[i],a[i],b[i])*h;
         
         
     }    
@@ -294,10 +298,4 @@ double leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
             cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
     }    
   
-}    
-
-double energia(){
-    
-    
-                         
 }    
