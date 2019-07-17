@@ -4,25 +4,104 @@
 
 using namespace std;
 
-double *rk4_2(double Vx, double Vy, double x,double y, int len, double h);
+double rk4_2(double Vx, double Vy, double x,double y, int len, double h);
 double euler_2(double Vx, double Vy, double x,double y, int len, double h);
-double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h);
+double leapfrog_2(double Vx, double Vy, double x,double y, int len, double h);
 
 int main(){
-    double h = 0.01;   
+    double h1 = 0.01;   
     double tmax = 20;
     int i;
     double x0, Vx0, y0, Vy0;
-    int len = ((tmax)/h);
+    int len1 = ((tmax)/h1);
     x0 = 0.1163;
     Vx0 = -6.35;
     y0 = 0.9772;
     Vy0 = 0.606;
-
-    rk4_2(Vx0,Vy0,x0,y0,len,h);
-    euler_2(Vx0,Vy0,x0,y0,len,h);
-    leapfrog_2(Vx0,Vy0,x0,y0,len,h);
     
+    //dt = 0.01
+    
+    ofstream myfile1;
+    myfile1.open ("datos1.dat", ios::out);
+    streambuf* stream_buffer_cout1 = cout.rdbuf();
+    streambuf* stream_buffer_myfile1 = myfile1.rdbuf();
+    cout.rdbuf(stream_buffer_myfile1);
+    rk4_2(Vx0,Vy0,x0,y0,len1,h1);
+    myfile1.close();   
+    
+    ofstream myfile2;
+    myfile2.open ("datos2.dat", ios::out);
+    streambuf* stream_buffer_cout2 = cout.rdbuf();
+    streambuf* stream_buffer_myfile2 = myfile2.rdbuf();
+    cout.rdbuf(stream_buffer_myfile2);
+    euler_2(Vx0,Vy0,x0,y0,len1,h1);
+    myfile2.close(); 
+    
+    ofstream myfile3;
+    myfile3.open ("datos3.dat", ios::out);
+    streambuf* stream_buffer_cout3 = cout.rdbuf();
+    streambuf* stream_buffer_myfile3 = myfile3.rdbuf();
+    cout.rdbuf(stream_buffer_myfile3);
+    leapfrog_2(Vx0,Vy0,x0,y0,len1,h1);
+    myfile3.close();   
+    
+    //dt = 0.5
+    
+    double h2 = 0.0001;
+    int len2 = ((tmax)/h2);    
+    
+    ofstream myfile4;
+    myfile4.open ("datos4.dat", ios::out);
+    streambuf* stream_buffer_cout4 = cout.rdbuf();
+    streambuf* stream_buffer_myfile4 = myfile4.rdbuf();
+    cout.rdbuf(stream_buffer_myfile4);
+    rk4_2(Vx0,Vy0,x0,y0,len2,h2);
+    myfile4.close();   
+    
+    ofstream myfile5;
+    myfile5.open ("datos5.dat", ios::out);
+    streambuf* stream_buffer_cout5 = cout.rdbuf();
+    streambuf* stream_buffer_myfile5 = myfile5.rdbuf();
+    cout.rdbuf(stream_buffer_myfile5);
+    euler_2(Vx0,Vy0,x0,y0,len2,h2);
+    myfile5.close(); 
+    
+    ofstream myfile6;
+    myfile6.open ("datos6.dat", ios::out);
+    streambuf* stream_buffer_cout6 = cout.rdbuf();
+    streambuf* stream_buffer_myfile6 = myfile6.rdbuf();
+    cout.rdbuf(stream_buffer_myfile6);
+    leapfrog_2(Vx0,Vy0,x0,y0,len2,h2);
+    myfile6.close();   
+    
+    // dt = 0.001
+
+    double h3 = 0.001;
+    int len3 = ((tmax)/h3);    
+    
+    ofstream myfile7;
+    myfile7.open ("datos7.dat", ios::out);
+    streambuf* stream_buffer_cout7 = cout.rdbuf();
+    streambuf* stream_buffer_myfile7 = myfile7.rdbuf();
+    cout.rdbuf(stream_buffer_myfile7);
+    rk4_2(Vx0,Vy0,x0,y0,len3,h3);
+    myfile7.close();   
+    
+    ofstream myfile8;
+    myfile8.open ("datos8.dat", ios::out);
+    streambuf* stream_buffer_cout8 = cout.rdbuf();
+    streambuf* stream_buffer_myfile8 = myfile8.rdbuf();
+    cout.rdbuf(stream_buffer_myfile8);
+    euler_2(Vx0,Vy0,x0,y0,len3,h3);
+    myfile8.close(); 
+    
+    ofstream myfile9;
+    myfile9.open ("datos9.dat", ios::out);
+    streambuf* stream_buffer_cout9 = cout.rdbuf();
+    streambuf* stream_buffer_myfile9 = myfile9.rdbuf();
+    cout.rdbuf(stream_buffer_myfile9);
+    leapfrog_2(Vx0,Vy0,x0,y0,len3,h3);
+    myfile9.close(); 
     return 0;    
 }
 
@@ -38,8 +117,18 @@ double f2(double Vx, double s, double x, double y){
     double G = G1*(1/(UA*UA*UA))*(M)*(yr*yr);
     return -(G*s)/pow(((x*x+y*y)),(3.0/2.0));
 }    
+
+double f3(double Vx, double Vy, double x, double y){
+    double G1 = 6.67e-11;
+    double UA = 149597870700;
+    double M = 1.99e30;
+    double yr = 31536000;
+    double m = 5.972e24;
+    double G = G1*(1/(UA*UA*UA))*(M)*(yr*yr);
+    return 0.5*m*(Vx*Vx + Vy*Vy)- (G*M*m)/(pow(x*x+y*y,0.5));   
+}    
    
-double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
+double rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     int i;
     double average1;
     double average2;
@@ -123,16 +212,11 @@ double *rk4_2(double Vx, double Vy, double x,double y, int len, double h){
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
     }  
-    ofstream myfile;
-    myfile.open ("datos1.dat", ios::out);
-    streambuf* stream_buffer_cout1 = cout.rdbuf();
-    streambuf* stream_buffer_myfile = myfile.rdbuf();
-    cout.rdbuf(stream_buffer_myfile);
+    
     for(i = 1; i<=len; i++){
             cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
-    }    
-    myfile.close();   
-
+    } 
+  
     
 }    
 
@@ -162,20 +246,13 @@ double euler_2(double Vx, double Vy, double x,double y, int len, double h){
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
     }  
-    
-    ofstream myfile;
-    myfile.open ("datos2.dat", ios::out);
-    streambuf* stream_buffer_cout1 = cout.rdbuf();
-    streambuf* stream_buffer_myfile = myfile.rdbuf();
-    cout.rdbuf(stream_buffer_myfile);
     for(i = 1; i<=len; i++){
             cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
-    }    
-    myfile.close();   
+    }      
 
 }    
 
-double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
+double leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
     int i;
     double tau = h/2.0;
     
@@ -212,13 +289,15 @@ double *leapfrog_2(double Vx, double Vy, double x,double y, int len, double h){
     for(i = 2; i <= len; i++){
         t[i]  = t[i-1] + h;
     }  
-    ofstream myfile;
-    myfile.open ("datos3.dat", ios::out);
-    streambuf* stream_buffer_cout1 = cout.rdbuf();
-    streambuf* stream_buffer_myfile = myfile.rdbuf();
-    cout.rdbuf(stream_buffer_myfile);
+
     for(i = 1; i<=len; i++){
             cout << t[i]<< " "  <<a[i] << " " << b[i] << " " << c[i] << " " << d[i] << endl;
     }    
-    myfile.close();    
+  
+}    
+
+double energia(){
+    
+    
+                         
 }    
