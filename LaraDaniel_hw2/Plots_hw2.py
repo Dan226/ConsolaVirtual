@@ -17,7 +17,7 @@ def energia(Vx,Vy,x,y):
     UA = 149597870700.0
     M = 1.99e30
     yr = 31536000.0
-    m = 5.972e24
+    m = 5.972e24/1.99e30
     G = G1*(1.0/(UA*UA*UA))*(M)*(yr*yr)
     E = np.zeros(len(Vx))
     for i in range(len(Vx)):
@@ -30,7 +30,7 @@ def energia(Vx,Vy,x,y):
     return E
 
 def momento(Vx,Vy,x,y):
-    m = 5.972e24
+    m = 5.972e24/1.99e30
     #momento angular: L = r x m*v
     L = np.zeros(len(x))
     
@@ -57,6 +57,16 @@ d3y = d3[:,2]
 d3Vx = d3[:,3]
 d3Vy = d3[:,4]
 
+d3x[-2] = d3x[-3]
+d3x[-1] = d3x[-2] 
+d3y[-2] = d3y[-3]
+d3y[-1] = d3y[-2] 
+d3Vx[-2] = d3Vx[-3]
+d3Vx[-1] = d3Vx[-2] 
+d3Vy[-2] = d3Vy[-3]
+d3Vy[-1] = d3Vy[-2] 
+
+
 t2 = d4[:,0]
 d4x = d4[:,1]
 d4y = d4[:,2]
@@ -73,6 +83,15 @@ d6y = d6[:,2]
 d6Vx = d6[:,3]
 d6Vy = d6[:,4]
 
+d6x[-2] = d6x[-3]
+d6x[-1] = d6x[-2] 
+d6y[-2] = d6y[-3]
+d6y[-1] = d6y[-2] 
+d6Vx[-2] = d6Vx[-3]
+d6Vx[-1] = d6Vx[-2] 
+d6Vy[-2] = d6Vy[-3]
+d6Vy[-1] = d6Vy[-2] 
+
 t3 = d7[:,0]
 d7x = d7[:,1]
 d7y = d7[:,2]
@@ -88,6 +107,16 @@ d9x = d9[:,1]
 d9y = d9[:,2]
 d9Vx = d9[:,3]
 d9Vy = d9[:,4]
+
+d9x[-2] = d9x[-3]
+d9x[-1] = d9x[-2] 
+d9y[-2] = d9y[-3]
+d9y[-1] = d9y[-2] 
+d9Vx[-2] = d9Vx[-3]
+d9Vx[-1] = d9Vx[-2] 
+d9Vy[-2] = d9Vy[-3]
+d9Vy[-1] = d9Vy[-2] 
+
 #Calculo energia
 E1 = energia(d1Vx,d1Vy,d1x,d1y)
 E2 = energia(d2Vx,d2Vy,d2x,d2y)
