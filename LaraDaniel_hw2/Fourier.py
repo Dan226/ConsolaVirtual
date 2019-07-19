@@ -29,7 +29,7 @@ cbar = plt.colorbar(b)
 plt.xlabel("w")
 plt.ylabel("F(w)")
 plt.title("Espectro de Fourier imagen 2")
-plt.savefig("FFT-2D-Imagenes.pdf")
+plt.savefig("FFtIm.pdf")
 
 ######## Se realizan filtros pasa-altos y pasa-bajos para realizar la imagen híbrida.
 def filtro1(fc, amp):
@@ -64,7 +64,7 @@ cbar = plt.colorbar(b)
 plt.xlabel("w")
 plt.ylabel("F(w)")
 plt.title("Filtro imagen 2")
-plt.savefig("FFT2Dfiltro.pdf")   
+plt.savefig("ImProceso.pdf")   
  
 ###########Transformada inversa
 filtrototal = np.zeros([np.shape(df21)[0],np.shape(df21)[1]])
@@ -83,5 +83,5 @@ if2 = ifft2(filtrototal)
 plt.figure()
 plt.figure(figsize=(20,10))
 plt.imshow(abs(if2),cmap = "gray",  norm = LogNorm())
-plt.savefig("ImFiltrada.pdf")
+plt.savefig("ImHybrid.pdf")
 
